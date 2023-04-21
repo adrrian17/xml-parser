@@ -1,3 +1,6 @@
 .DS_Store
 node_modules/
 queries/archive/*
+
+rep-parser/xmls/*
+!rep-parser/xmls/.gitkeep
