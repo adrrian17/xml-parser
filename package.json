@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "single-parser": "node single-parser/oneConceptParser.js",
+    "single-parser": "node single-parser/single-parser.js",
     "multi-parser": "node multi-parser/multi-parser.js"
   },
   "author": "Adrian Ayala",
