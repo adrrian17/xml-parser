@@ -43,6 +43,11 @@ async function ls(path) {
 
         conceptos.forEach(async (concepto) => {
           const conceptValues = {
+            serie: values.serie,
+            folio: values.folio,
+            uuid: values.uuid,
+            RFC: values.RFC,
+            fecha: values.fecha,
             noIdentificacion: concepto['NoIdentificacion'],
             unidad: concepto['Unidad'],
             descripcion: concepto['Descripcion'],

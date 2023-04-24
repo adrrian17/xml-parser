@@ -32,7 +32,7 @@ INSERT INTO Factura(
   1,5,@idDomicilioReceptor,
   265542,{{idCatFormaPago}}, null,
   null,'{{serie}}',{{folio}},
-  '{{rfc}}','{{nombre}}',0,
+  '{{RFC}}','{{nombre}}',0,
   1,0,{{total}},
   {{iva}},{{subTotal}},'{{uuid}}',
   1,null,1,
@@ -68,7 +68,7 @@ INSERT INTO DetalleFactura (
   claveProdServ, c_ClaveUnidad, cantidad
 ) VALUES (
   @idFactura,@idCatProducto,'{{serie}}',
-  '{{folio}}','{{rfc}}','{{uuid}}',
+  '{{folio}}','{{RFC}}','{{uuid}}',
   '{{noIdentificacion}}','{{unidad}}','{{descripcion}}',
   {{valorUnitario}},{{importe}},0,
   0,'{{fecha}}',58703,
