@@ -1,9 +1,8 @@
 import fs from 'fs';
 import parser from 'xml2json';
 import templateFile from 'template-file';
-import mergeFiles from 'merge-files';
 
-async function lsXMLs(path) {
+async function ls(path) {
   const files = await fs.promises.readdir(path);
   const { renderToFolder } = templateFile;
 
@@ -36,13 +35,8 @@ async function lsXMLs(path) {
           uuidRelacionado: XML['cfdi:Comprobante']['cfdi:CfdiRelacionados']
             ? `,4,'${XML['cfdi:Comprobante']['cfdi:CfdiRelacionados']['cfdi:CfdiRelacionado']['UUID']}'`
             : '',
+          conceptos: [],
         };
-
-        await renderToFolder(
-          './multi-parser/factura.sql',
-          `./queries/${folder}/`,
-          values
-        );
 
         const conceptos =
           XML['cfdi:Comprobante']['cfdi:Conceptos']['cfdi:Concepto'];
@@ -53,6 +47,7 @@ async function lsXMLs(path) {
             unidad: concepto['Unidad'],
             descripcion: concepto['Descripcion'],
             importe: concepto['Importe'],
+            valorUnitario: concepto['valorUnitario'],
             claveProdServ: concepto['ClaveProdServ'],
             claveUnidad: concepto['ClaveUnidad'],
             cantidad: concepto['Cantidad'],
@@ -74,53 +69,17 @@ async function lsXMLs(path) {
                 : 0,
           };
 
-          const subFolder = `./queries/${folder}/${conceptValues.noIdentificacion}`;
-
-          const data = Object.assign(values, conceptValues);
-
-          await renderToFolder(
-            './multi-parser/detalle-factura.sql',
-            `${subFolder}/`,
-            data
-          );
-          await renderToFolder(
-            './multi-parser/detalle-impuesto.sql',
-            `${subFolder}/`,
-            data
-          );
-          await renderToFolder(
-            './multi-parser/cargo.sql',
-            `${subFolder}/`,
-            data
-          );
+          values.conceptos.push(conceptValues);
         });
+
+        await renderToFolder(
+          './multi-parser/queries.sql',
+          `./queries/${folder}/`,
+          values
+        );
       });
     }
   }
 }
 
-async function ls(path) {
-  const dirs = await fs.promises.readdir(path);
-
-  for (const dir of dirs) {
-    if (dir !== '.DS_Store' && dir !== '.gitkeep') {
-      let subDirs = await fs.promises.readdir(`${path}/${dir}`);
-
-      const outputPath = `./queries/${dir}/queries.sql`;
-      const files = [`./queries/${dir}/factura.sql`];
-
-      subDirs = subDirs.filter((subDir) => !subDir.includes('.sql'));
-
-      for (const subDir of subDirs) {
-        files.push(`${path}/${dir}/${subDir}/detalle-factura.sql`);
-        files.push(`${path}/${dir}/${subDir}/detalle-impuesto.sql`);
-        files.push(`${path}/${dir}/${subDir}/cargo.sql`);
-      }
-
-      await mergeFiles(files, outputPath);
-    }
-  }
-}
-
-lsXMLs('./multi-parser/xmls').catch(console.error);
-ls('./queries').catch(console.error);
+ls('./multi-parser/xmls').catch(console.error);
