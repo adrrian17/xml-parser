@@ -50,7 +50,6 @@ SELECT
   fechaCreacion 
 FROM CatProducto
 WHERE claveProducto in ('{{noIdentificacion}}')
-AND fechaCreación >= '2022-12-31 00:00:00'; 
 
 SELECT
   @idFactura=f.idFactura
