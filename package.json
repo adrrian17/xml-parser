@@ -5,8 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "single-parser": "node single-parser/single-parser.js",
-    "multi-parser": "node multi-parser/multi-parser.js"
+    "parse-invoices": "node invoice-parser/parser.js",
   },
   "author": "Adrian Ayala",
   "license": "ISC",

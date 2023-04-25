@@ -117,7 +117,7 @@ async function ls(path) {
         }
 
         await renderToFolder(
-          './multi-parser/queries.sql',
+          './invoice-parser/queries.sql',
           `./queries/${folder}/`,
           values
         );
@@ -126,4 +126,4 @@ async function ls(path) {
   }
 }
 
-ls('./multi-parser/xmls').catch(console.error);
+ls('./invoice-parser/xmls').catch(console.error);

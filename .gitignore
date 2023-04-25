@@ -8,8 +8,5 @@ queries/*
 rep-parser/xmls/*
 !rep-parser/xmls/.gitkeep
 
-single-parser/xmls/*
-!single-parser/xmls/.gitkeep
-
-multi-parser/xmls/*
-!multi-parser/xmls/.gitkeep
+invoice-parser/xmls/*
+!invoice-parser/xmls/.gitkeep
