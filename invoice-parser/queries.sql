@@ -26,7 +26,7 @@ INSERT INTO Factura(
   idUsuarioModifico, idCatEstatusFactura, observaciones,
   condicionesPago, cSatTipoDeComprobante, cSatPais,
   cSatUsoCFDI, cSatMetodoPago, cSatMoneda,
-  version, satTipoRelacion, uuidsRelacionados
+  version{{uuidRelacionado ? ', satTipoRelacion, uuidsRelacionados' : ''}}
 ) VALUES (
   @idCliente,1,1,
   1,5,@idDomicilioReceptor,
@@ -50,6 +50,7 @@ SELECT
   fechaCreacion 
 FROM CatProducto
 WHERE claveProducto in ('{{noIdentificacion}}')
+AND fechaCreacion >= '2022-12-31 00:00:00';
 
 SELECT
   @idFactura=f.idFactura
