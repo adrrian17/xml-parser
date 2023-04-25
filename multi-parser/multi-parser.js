@@ -41,7 +41,46 @@ async function ls(path) {
         const conceptos =
           XML['cfdi:Comprobante']['cfdi:Conceptos']['cfdi:Concepto'];
 
-        conceptos.forEach(async (concepto) => {
+        if (Array.isArray(conceptos)) {
+          conceptos.forEach(async (concepto) => {
+            const conceptValues = {
+              serie: values.serie,
+              folio: values.folio,
+              uuid: values.uuid,
+              RFC: values.RFC,
+              fecha: values.fecha,
+              noIdentificacion: concepto['NoIdentificacion'],
+              unidad: concepto['Unidad'],
+              descripcion: concepto['Descripcion'],
+              importe: concepto['Importe'],
+              valorUnitario: concepto['valorUnitario'],
+              claveProdServ: concepto['ClaveProdServ'],
+              claveUnidad: concepto['ClaveUnidad'],
+              cantidad: concepto['Cantidad'],
+              impuestoConcepto:
+                concepto['cfdi:Impuestos']['cfdi:Traslados']['cfdi:Traslado'][
+                  'Importe'
+                ],
+              totalConcepto:
+                parseFloat(concepto.Importe) +
+                parseFloat(
+                  concepto['cfdi:Impuestos']['cfdi:Traslados']['cfdi:Traslado'][
+                    'Importe'
+                  ]
+                ),
+              descuentoPorcentaje:
+                concepto['Descuento'] > 0
+                  ? parseFloat(concepto.Importe) /
+                    parseFloat(concepto['Descuento'])
+                  : 0,
+            };
+
+            values.conceptos.push(conceptValues);
+          });
+        } else {
+          const concepto =
+            XML['cfdi:Comprobante']['cfdi:Conceptos']['cfdi:Concepto'];
+
           const conceptValues = {
             serie: values.serie,
             folio: values.folio,
@@ -75,7 +114,7 @@ async function ls(path) {
           };
 
           values.conceptos.push(conceptValues);
-        });
+        }
 
         await renderToFolder(
           './multi-parser/queries.sql',
