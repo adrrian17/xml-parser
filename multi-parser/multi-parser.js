@@ -53,7 +53,7 @@ async function ls(path) {
               unidad: concepto['Unidad'],
               descripcion: concepto['Descripcion'],
               importe: concepto['Importe'],
-              valorUnitario: concepto['valorUnitario'],
+              valorUnitario: concepto['ValorUnitario'],
               claveProdServ: concepto['ClaveProdServ'],
               claveUnidad: concepto['ClaveUnidad'],
               cantidad: concepto['Cantidad'],
