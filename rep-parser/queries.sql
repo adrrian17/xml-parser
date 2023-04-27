@@ -1,0 +1,109 @@
+DECLARE @idCliente AS INT
+DECLARE @idDomicilioReceptor AS INT
+DECLARE @idDetalleFactura AS INT
+DECLARE @idFactura AS INT
+DECLARE @idComprobantePago AS INT
+DECLARE @idConciliacion AS INT
+
+SELECT 
+  @idCliente=c.idcliente, 
+  @idDomicilioReceptor=cd.idDomicilio
+FROM cliente c with(nolock) 
+INNER JOIN ClienteDomicilio cd with(nolock) on cd.idcliente = c.idCliente
+WHERE c.rfc in ('{{RFC}}');
+
+INSERT INTO Factura(
+  idCliente, idEmpresa, idCatTipoMoneda,
+  idCatTipoComprobante, idCatMotivoDescuento, idDomicilioReceptor,
+  idDomicilioEmisor, idCatFormaPago, idPedido,
+  idFacturaRelacionada, serie, folio,
+  rfc, razonSocial, descuento,
+  vigente, conciliada, total,
+  iva, subTotal, uuid,
+  cambio, parcialidades, parcialidad,
+  generaCorte, fechaMaximaPago, fechaFacturacion,
+  fechaCancelacion, fechaCreacion, fechaModificacion,
+  idUsuarioModifico, idCatEstatusFactura, observaciones,
+  condicionesPago, cSatTipoDeComprobante, cSatPais,
+  cSatUsoCFDI, cSatMetodoPago, cSatMoneda,
+  version, satTipoRelacion, uuidsRelacionados
+) VALUES (
+  @idCliente,1,1,
+  9,5,@idDomicilioReceptor,
+  265542,2,null,
+  null,'{{serie}}',{{folio}},
+  '{{RFC}}','{{nombre}}',0,
+  1,0,0,
+  0,0,'{{uuid}}',
+  1,null,1,
+  1,null,'{{fecha}}',
+  null,'{{fecha}}',null,
+  58703,1,'',
+  '','P','MEX',
+  'CP01','PPD','MXN',
+  '{{version}}'{{relacionados}}
+)
+
+SELECT
+  @idComprobantePago=f.idFactura
+FROM factura f with(nolock)
+INNER JOIN cliente c with(nolock) on f.idcliente = c.idcliente 
+WHERE f.uuid IN ('{{uuid}}') 
+AND f.idcliente IN (@idCliente)
+ORDER BY f.idfactura;
+
+INSERT INTO DetalleFactura (
+  @idFactura, idCatProducto, serie,
+  folio, rfc, uuid,
+  claveProducto, unidad, descripcion,
+  valorUnitario, importe, descuento,
+  descuentoPorcentaje, fechaCreacion, idUsuarioModifico,
+  claveProdServ, c_ClaveUnidad, cantidad
+) VALUES (
+  @idComprobantePago,null,'{{serie}}',
+  '{{folio}}','{{RFC}}','{{uuid}}',
+  null,null,'{{descripcion}}',
+  0,0,0,
+  0,'{{fecha}}',58703,
+  {{claveProdServ}},null,1
+)
+
+SELECT @idDetalleFactura=idDetalleFactura
+FROM DetalleFactura 
+WHERE idfactura in (@idComprobantePago)
+ORDER BY idFactura
+
+INSERT INTO DetalleFacturaImpuesto(
+  idDetalleFactura, idCatImpuesto, tasa,
+  valor, fechaCreacion, idUsuarioModifico,
+  c_impuesto, valorMaximo
+) VALUES (
+  @idDetalleFactura,3,0,
+  0,'{{fecha}}',58703,
+  2,0.0
+)
+
+SELECT
+  @idFactura=f.idFactura
+FROM factura f with(nolock)
+WHERE f.uuid IN ('{{uuidRelacionado}}') 
+
+SELECT
+  @idConciliacion=idConciliacionBancaria
+FROM ConciliacionBancaria 
+WHERE idCliente = @idCliente
+AND valor = {{impPagado}}
+AND fechaPago >= '{{fechaQuery}}'
+ORDER BY fechaCreacion DESC
+
+INSERT INTO ComprobantePagoConciliacion (
+  idFactura,idComprobantePago,
+  idConciliacion,parcialidad,saldoAnterior,
+  saldoInsoluto,importeAplicado,vigente,
+  fechaCreacion,idUsuarioModifico,fechaPago
+) VALUES (
+  @idFactura,@idComprobantePago,
+  @idConciliacion,{{numParcialidad}},{{impSaldoAnt}},
+  {{impSaldoInsoluto}},{{impPagado}},1,
+  '{{fechaCreacion}}',58703,'{{fechaPago}}'
+)

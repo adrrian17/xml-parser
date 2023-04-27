@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "parse-invoices": "node invoice-parser/parser.js",
+    "parse-reps": "node rep-parser/parser.js"
   },
   "author": "Adrian Ayala",
   "license": "ISC",
