@@ -2,6 +2,10 @@
 
 Este proyecto contiene dos scripts que se usan para leer XMLs de facturas y comprobantes de pago para después generar los queries de SQL necesarios para registrarlos en Optimus.
 
+## Instalación
+
+Una vez descargado el repositorio en tu equipo, tienes que usar el comando `npm install` o `yarn install` desde la raíz del repositorio para instalar los módulos necesarios.
+
 ## Invoice Parser
 
 Pasos para usar el script para las facturas es el siguiente:
