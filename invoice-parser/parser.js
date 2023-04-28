@@ -88,6 +88,7 @@ async function ls(path) {
           } else {
             const concepto =
               XML['cfdi:Comprobante']['cfdi:Conceptos']['cfdi:Concepto'];
+
             const conceptValues = {
               serie: values.serie,
               folio: values.folio,
@@ -98,7 +99,7 @@ async function ls(path) {
               unidad: concepto['Unidad'],
               descripcion: concepto['Descripcion'],
               importe: concepto['Importe'],
-              valorUnitario: concepto['valorUnitario'],
+              valorUnitario: concepto['ValorUnitario'],
               claveProdServ: concepto['ClaveProdServ'],
               claveUnidad: concepto['ClaveUnidad'],
               cantidad: concepto['Cantidad'],
@@ -119,7 +120,10 @@ async function ls(path) {
                     parseFloat(concepto['Descuento'])
                   : 0,
             };
+
             values.conceptos.push(conceptValues);
+
+            console.log(conceptValues);
           }
           await renderToFolder(
             './invoice-parser/queries.sql',
