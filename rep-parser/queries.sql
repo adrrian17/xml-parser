@@ -53,7 +53,7 @@ AND f.idcliente IN (@idCliente)
 ORDER BY f.idfactura;
 
 INSERT INTO DetalleFactura (
-  @idFactura, idCatProducto, serie,
+  idFactura, idCatProducto, serie,
   folio, rfc, uuid,
   claveProducto, unidad, descripcion,
   valorUnitario, importe, descuento,
