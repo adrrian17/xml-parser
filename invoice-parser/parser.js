@@ -122,8 +122,6 @@ async function ls(path) {
             };
 
             values.conceptos.push(conceptValues);
-
-            console.log(conceptValues);
           }
           await renderToFolder(
             './invoice-parser/queries.sql',
