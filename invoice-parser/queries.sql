@@ -46,7 +46,7 @@ INSERT INTO Factura(
 {{#conceptos}}
 SELECT 
   @claveProducto=claveproducto, 
-  @idCatProducto=idcatproducto,
+  @idCatProducto=idcatproducto
 FROM CatProducto
 WHERE claveProducto in ('{{noIdentificacion}}')
 AND fechaCreacion >= '2022-12-31 00:00:00';
