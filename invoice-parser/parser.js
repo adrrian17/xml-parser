@@ -1,20 +1,22 @@
 import fs from 'fs';
 import parser from 'xml2json';
 import templateFile from 'template-file';
+import path from 'path';
+import async from 'async';
 
-async function ls(path) {
-  const folders = await fs.promises.readdir(path);
-  const { renderToFolder } = templateFile;
+async function ls(directory) {
+  const folders = await fs.promises.readdir(directory);
+  const { renderFile } = templateFile;
 
   for (const folder of folders) {
     if (folder !== '.DS_Store' && folder !== '.gitkeep') {
-      fs.readdir(`${path}/${folder}`, async function (err, file) {
+      fs.readdir(`${directory}/${folder}`, async function (err, file) {
         let xmlPath;
 
         if (file.length > 1) {
-          xmlPath = `${path}/${folder}/${file[1]}`;
+          xmlPath = `${directory}/${folder}/${file[1]}`;
         } else {
-          xmlPath = `${path}/${folder}/${file[0]}`;
+          xmlPath = `${directory}/${folder}/${file[0]}`;
         }
 
         fs.readFile(xmlPath, async function (err, data) {
@@ -127,15 +129,38 @@ async function ls(path) {
 
             values.conceptos.push(conceptValues);
           }
-          await renderToFolder(
-            './invoice-parser/queries.sql',
-            `./queries/${folder}/`,
-            values
-          );
+
+          const SQL = await renderFile('./invoice-parser/template.sql', values);
+
+          fs.writeFile(`./SQL/${values.RFC}.sql`, SQL, (err) => {
+            if (err) console.log(err);
+          });
         });
       });
     }
   }
+
+  return new Promise((resolve, reject) => {
+    fs.readdir('./SQL', (err, files) => {
+      if (err) return reject(err);
+
+      files = files.map((file) => path.join('./SQL', file));
+
+      // Quita el .gitkeep y el .DS_Store
+      files.shift();
+      files.shift();
+
+      async.map(files, fs.readFile, (err, results) => {
+        if (err) return reject(err);
+
+        fs.writeFile('./SQL/queries.sql', results.join('\n'), (err) => {
+          if (err) return reject(err);
+
+          resolve();
+        });
+      });
+    });
+  });
 }
 
 ls('./invoice-parser/xmls').catch(console.error);

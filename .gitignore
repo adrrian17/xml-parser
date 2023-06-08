@@ -2,8 +2,8 @@
 node_modules/
 
 archive/*
-queries/*
-!queries/.gitkeep
+SQL/*
+!SQL/.gitkeep
 
 rep-parser/xmls/*
 !rep-parser/xmls/.gitkeep

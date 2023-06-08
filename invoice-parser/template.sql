@@ -12,7 +12,8 @@ FROM cliente c with(nolock)
 INNER JOIN ClienteDomicilio cd with(nolock) on cd.idcliente = c.idCliente
 WHERE c.rfc in ('{{RFC}}');
 
-INSERT INTO Factura(
+INSERT INTO Factura
+(
   idCliente, idEmpresa, idCatTipoMoneda,
   idCatTipoComprobante, idCatMotivoDescuento, idDomicilioReceptor,
   idDomicilioEmisor, idCatFormaPago, idPedido,
@@ -44,6 +45,7 @@ INSERT INTO Factura(
   '{{version}}'{{uuidRelacionado}}
 )
 {{#conceptos}}
+
 SELECT 
   @claveProducto=claveproducto, 
   @idCatProducto=idcatproducto
@@ -102,3 +104,5 @@ INSERT INTO Cargo(
   NULL,58703
 )
 {{/conceptos}}
+
+GO
