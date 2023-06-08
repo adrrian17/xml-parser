@@ -47,6 +47,10 @@ async function ls(path) {
             conceptos: [],
           };
 
+          if (values.uuidRelacionado !== '')
+            values.columnasUuidRelacionado =
+              ', satTipoRelacion, uuidsRelacionados';
+
           const conceptos =
             XML['cfdi:Comprobante']['cfdi:Conceptos']['cfdi:Concepto'];
 

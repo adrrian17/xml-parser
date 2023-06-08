@@ -26,7 +26,7 @@ INSERT INTO Factura(
   idUsuarioModifico, idCatEstatusFactura, observaciones,
   condicionesPago, cSatTipoDeComprobante, cSatPais,
   cSatUsoCFDI, cSatMetodoPago, cSatMoneda,
-  version{{uuidRelacionado ? ', satTipoRelacion, uuidsRelacionados' : ''}}
+  version{{columnasUuidRelacionado}}
 ) VALUES (
   @idCliente,1,1,
   1,5,@idDomicilioReceptor,
