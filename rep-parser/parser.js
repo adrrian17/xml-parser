@@ -47,6 +47,7 @@ function parseXMLs() {
               ]['FechaTimbrado'].replace('T', ' '),
               claveProdServ: concepto['ClaveProdServ'],
               descripcion: concepto['Descripcion'],
+              pagos: [],
             };
 
             const pagos =
@@ -54,44 +55,48 @@ function parseXMLs() {
                 'pago20:Pago'
               ];
 
-            if (pagos.length > 1) {
-              let relacionados = '';
+            if (Array.isArray(pagos['pago20:DoctoRelacionado'])) {
+              values.impPagado = pagos.Monto;
+              values.fechaPago = pagos['FechaPago'].replace('T', ' ');
+              values.fechaQuery = pagos['FechaPago'].substring(0, 10);
 
-              values.uuidRelacionado =
-                pagos[0]['pago20:DoctoRelacionado']['IdDocumento'];
-              values.numParcialidad =
-                pagos[0]['pago20:DoctoRelacionado']['NumParcialidad'];
+              pagos['pago20:DoctoRelacionado'].forEach((pago) => {
+                const pagosValues = {
+                  uuidRelacionado: pago['IdDocumento'],
+                  impSaldoAnt: parseFloat(pago['ImpSaldoAnt']),
+                  impSaldoInsoluto: parseFloat(pago['ImpSaldoInsoluto']),
+                  impPagado: parseFloat(pago['ImpPagado']),
+                  numParcialidad: pago['NumParcialidad'],
+                  fechaPago: values.fechaPago,
+                  fechaCreacion: values.fechaCreacion,
+                };
 
-              values.impSaldoAnt = 0;
-              values.impSaldoInsoluto = 0;
-              values.impPagado = 0;
-
-              values.fechaPago = pagos[0]['FechaPago'].replace('T', ' ');
-              values.fechaQuery = pagos[0]['FechaPago'].substring(0, 10);
-
-              pagos.forEach((pago) => {
-                const data = pago['pago20:DoctoRelacionado'];
-
-                relacionados = `,${data['IdDocumento']}` + relacionados;
-                values.impSaldoAnt += parseFloat(data['ImpSaldoAnt']);
-                values.impSaldoInsoluto += parseFloat(data['ImpSaldoInsoluto']);
-                values.impPagado += parseFloat(data['ImpPagado']);
+                values.pagos.push(pagosValues);
               });
-
-              values.relacionados = `,null, '${relacionados.substring(1)}'`;
             } else {
-              values.relacionados = `,null,'${pagos['pago20:DoctoRelacionado']['IdDocumento']}'`;
-              values.uuidRelacionado =
-                pagos['pago20:DoctoRelacionado']['IdDocumento'];
-              values.numParcialidad =
-                pagos['pago20:DoctoRelacionado']['NumParcialidad'];
-              values.impSaldoAnt =
-                pagos['pago20:DoctoRelacionado']['ImpSaldoAnt'];
-              values.impSaldoInsoluto =
-                pagos['pago20:DoctoRelacionado']['ImpSaldoInsoluto'];
               values.impPagado = pagos['pago20:DoctoRelacionado']['ImpPagado'];
               values.fechaPago = pagos['FechaPago'].replace('T', ' ');
               values.fechaQuery = pagos['FechaPago'].substring(0, 10);
+
+              const pagosValues = {
+                uuidRelacionado:
+                  pagos['pago20:DoctoRelacionado']['IdDocumento'],
+                impSaldoAnt: parseFloat(
+                  pagos['pago20:DoctoRelacionado']['ImpSaldoAnt']
+                ),
+                impSaldoInsoluto: parseFloat(
+                  pagos['pago20:DoctoRelacionado']['ImpSaldoInsoluto']
+                ),
+                impPagado: parseFloat(
+                  pagos['pago20:DoctoRelacionado']['ImpPagado']
+                ),
+                numParcialidad:
+                  pagos['pago20:DoctoRelacionado']['NumParcialidad'],
+                fechaPago: values.fechaPago,
+                fechaCreacion: values.fechaCreacion,
+              };
+
+              values.pagos.push(pagosValues);
             }
 
             const result = await renderFile(

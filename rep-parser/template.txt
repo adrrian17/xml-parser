@@ -84,17 +84,17 @@ INSERT INTO DetalleFacturaImpuesto(
 )
 
 SELECT
-  @idFactura=f.idFactura
-FROM factura f with(nolock)
-WHERE f.uuid IN ('{{uuidRelacionado}}') 
-
-SELECT
   @idConciliacion=idConciliacionBancaria
 FROM ConciliacionBancaria 
 WHERE idCliente = @idCliente
-AND valor = {{impPagado}}
-AND fechaPago >= '{{fechaQuery}}'
+  AND valor = {{impPagado}}
+  AND fechaPago >= '{{fechaQuery}}'
 ORDER BY fechaCreacion DESC
+
+{{#pagos}}
+SELECT @idFactura=idFactura
+FROM factura 
+WHERE uuid IN ('{{uuidRelacionado}}') 
 
 INSERT INTO ComprobantePagoConciliacion (
   idFactura,idComprobantePago,
@@ -107,5 +107,6 @@ INSERT INTO ComprobantePagoConciliacion (
   {{impSaldoInsoluto}},{{impPagado}},1,
   '{{fechaCreacion}}',58703,'{{fechaPago}}'
 )
+{{/pagos}}
 
 GO
