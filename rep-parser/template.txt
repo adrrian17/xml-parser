@@ -41,7 +41,7 @@ INSERT INTO Factura(
   58703,1,'',
   '','P','MEX',
   'CP01','PPD','MXN',
-  '{{version}}'{{relacionados}}
+  '{{version}}','{{uuidRelacionado}}'
 )
 
 SELECT

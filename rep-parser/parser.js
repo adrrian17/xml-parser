@@ -77,6 +77,8 @@ function parseXMLs() {
               values.impPagado = pagos['pago20:DoctoRelacionado']['ImpPagado'];
               values.fechaPago = pagos['FechaPago'].replace('T', ' ');
               values.fechaQuery = pagos['FechaPago'].substring(0, 10);
+              values.uuidRelacionado =
+                pagos['pago20:DoctoRelacionado']['IdDocumento'];
 
               const pagosValues = {
                 uuidRelacionado:
@@ -107,7 +109,7 @@ function parseXMLs() {
             string.push(result);
           })
           .then(() => {
-            fs.writeFile(`./SQL/queries-${date}.sql`, string.join('\n\n'));
+            fs.writeFile(`./SQL/reps-${date}.sql`, string.join('\n\n'));
           });
       });
     }
