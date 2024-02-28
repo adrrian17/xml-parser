@@ -8,11 +8,11 @@ DECLARE @idFactura AS INT
 SELECT 
   @idCliente=c.idcliente, 
   @idDomicilioReceptor=cd.idDomicilio
-FROM cliente c with(nolock) 
-INNER JOIN ClienteDomicilio cd with(nolock) on cd.idcliente = c.idCliente
+FROM OptimusDB.dbo.Cliente c with(nolock) 
+INNER JOIN OptimusDB.dbo.ClienteDomicilio cd with(nolock) on cd.idcliente = c.idCliente
 WHERE c.rfc in ('{{RFC}}');
 
-INSERT INTO Factura
+INSERT INTO OptimusDB.dbo.Factura
 (
   idCliente, idEmpresa, idCatTipoMoneda,
   idCatTipoComprobante, idCatMotivoDescuento, idDomicilioReceptor,
@@ -49,19 +49,19 @@ INSERT INTO Factura
 SELECT 
   @claveProducto=claveproducto, 
   @idCatProducto=idcatproducto
-FROM CatProducto
+FROM OptimusDB.dbo.CatProducto
 WHERE claveProducto in ('{{noIdentificacion}}')
 AND fechaCreacion >= '2022-12-31 00:00:00';
 
 SELECT
   @idFactura=f.idFactura
-FROM factura f with(nolock)
-INNER JOIN cliente c with(nolock) on f.idcliente = c.idcliente 
+FROM OptimusDB.dbo.factura f with(nolock)
+INNER JOIN OptimusDB.dbo.cliente c with(nolock) on f.idcliente = c.idcliente 
 WHERE f.uuid IN ('{{uuid}}') 
 AND f.idcliente IN (@idCliente)
 ORDER BY f.idfactura;
 
-INSERT INTO DetalleFactura (
+INSERT INTO OptimusDB.dbo.DetalleFactura (
   idFactura, idCatProducto, serie,
   folio, rfc, uuid,
   claveProducto, unidad, descripcion,
@@ -78,11 +78,11 @@ INSERT INTO DetalleFactura (
 )
 
 SELECT @idDetalleFactura=idDetalleFactura
-FROM DetalleFactura 
+FROM OptimusDB.dbo.DetalleFactura 
 WHERE idfactura in (@idFactura)
 ORDER BY idFactura;
 
-INSERT INTO DetalleFacturaImpuesto(
+INSERT INTO OptimusDB.dbo.DetalleFacturaImpuesto(
   idDetalleFactura, idCatImpuesto, tasa,
   valor, fechaCreacion, idUsuarioModifico,
   c_impuesto, valorMaximo
@@ -92,7 +92,7 @@ INSERT INTO DetalleFacturaImpuesto(
   2,0.16
 )
 
-INSERT INTO Cargo(
+INSERT INTO OptimusDB.dbo.Cargo(
   idCliente, idFactura, valor,
   valorPagado, valorSaldo, nombre,
   descripcion, liquidado, fechaCreacion,
