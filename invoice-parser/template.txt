@@ -39,7 +39,7 @@ INSERT INTO OptimusDB.dbo.Factura
   1,null,1,
   1,null,'{{fecha}}',
   null,'{{fecha}}',null,
-  58703,1,'',
+  116497,1,'',
   '','I','MEX',
   'G03','{{metodoPago}}','MXN',
   '{{version}}'{{uuidRelacionado}}
@@ -51,7 +51,7 @@ SELECT
   @idCatProducto=idcatproducto
 FROM OptimusDB.dbo.CatProducto
 WHERE claveProducto in ('{{noIdentificacion}}')
-AND fechaCreacion >= '2022-12-31 00:00:00';
+AND fechaCreacion >= '2024-01-01 00:00:00';
 
 SELECT
   @idFactura=f.idFactura
@@ -73,7 +73,7 @@ INSERT INTO OptimusDB.dbo.DetalleFactura (
   '{{folio}}','{{RFC}}','{{uuid}}',
   '{{noIdentificacion}}','{{unidad}}','{{descripcion}}',
   {{valorUnitario}},{{importe}},0,
-  0,'{{fecha}}',58703,
+  0,'{{fecha}}',116497,
   {{claveProdServ}},'{{claveUnidad}}',{{cantidad}}
 )
 
@@ -88,7 +88,7 @@ INSERT INTO OptimusDB.dbo.DetalleFacturaImpuesto(
   c_impuesto, valorMaximo
 ) VALUES (
   @idDetalleFactura,1,16,
-  {{impuestoConcepto}},'{{fecha}}',58703,
+  {{impuestoConcepto}},'{{fecha}}',116497,
   2,0.16
 )
 
@@ -101,7 +101,7 @@ INSERT INTO OptimusDB.dbo.Cargo(
   @idCliente,@idFactura,-{{totalConcepto}},
   0,'-{{totalConcepto}}','{{noIdentificacion}}',
   '{{descripcion}}',0,'{{fecha}}',
-  NULL,58703
+  NULL,116497
 )
 {{/conceptos}}
 
